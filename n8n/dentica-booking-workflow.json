@@ -1,0 +1,171 @@
+{
+  "name": "Dentica — Booking Engine",
+  "settings": { "executionOrder": "v1", "timezone": "Africa/Cairo" },
+  "nodes": [
+    {
+      "id": "wh-book",
+      "name": "Booking Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-460, 0],
+      "webhookId": "dentica-booking",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dentica-booking",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      }
+    },
+    {
+      "id": "normalize",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-240, 0],
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body || $input.first().json;\n\n// keep only digits, force the Egyptian country code\nfunction wa(p) {\n  let d = String(p || '').replace(/\\D/g, '');\n  if (d.startsWith('00')) d = d.slice(2);\n  if (d.startsWith('0')) d = '20' + d.slice(1);\n  if (!d.startsWith('20') && d.length === 10) d = '20' + d;\n  return d;\n}\n\nconst ref = b.ref || 'DEN-' + Date.now().toString().slice(-6);\nconst when = `${b.date} ${b.time}`;\n\nreturn [{ json: {\n  ref,\n  createdAt: b.createdAt || new Date().toISOString(),\n  name: (b.name || '').trim(),\n  phone: b.phone || '',\n  phoneWa: wa(b.phone),\n  email: b.email || '',\n  service: b.serviceName || b.serviceEn || '',\n  serviceId: b.serviceId || '',\n  duration: b.duration || 30,\n  date: b.date,\n  time: b.time,\n  when,\n  startsAt: b.startsAt || `${b.date}T${b.time}:00`,\n  notes: b.notes || '',\n  firstVisit: b.firstVisit ? 'Yes' : 'No',\n  lang: b.lang || 'ar',\n  source: b.source || 'website',\n  status: 'New'\n} }];"
+      }
+    },
+    {
+      "id": "sheet-append",
+      "name": "Append to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [-20, 0],
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "mode": "id", "value": "PUT_YOUR_GOOGLE_SHEET_ID_HERE" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Bookings" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Ref": "={{ $json.ref }}",
+            "Created At": "={{ $json.createdAt }}",
+            "Name": "={{ $json.name }}",
+            "Phone": "={{ $json.phone }}",
+            "Email": "={{ $json.email }}",
+            "Service": "={{ $json.service }}",
+            "Duration": "={{ $json.duration }}",
+            "Date": "={{ $json.date }}",
+            "Time": "={{ $json.time }}",
+            "Notes": "={{ $json.notes }}",
+            "First Visit": "={{ $json.firstVisit }}",
+            "Language": "={{ $json.lang }}",
+            "Source": "={{ $json.source }}",
+            "Status": "={{ $json.status }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": { "googleSheetsOAuth2Api": { "id": "REPLACE", "name": "Google Sheets account" } }
+    },
+    {
+      "id": "wa-reception",
+      "name": "WhatsApp — Receptionist",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, -110],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://EVOLUTION_HOST/message/sendText/EVOLUTION_INSTANCE",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "apikey", "value": "PUT_YOUR_EVOLUTION_API_KEY" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  number: '201000000000',\n  text: `🦷 *حجز جديد — دنتيكا*\\n\\n👤 الاسم: ${$json.name}\\n📱 التليفون: ${$json.phone}\\n🦷 الخدمة: ${$json.service} (${$json.duration} دقيقة)\\n📅 المعاد: ${$json.date} — ${$json.time}\\n🆕 أول زيارة: ${$json.firstVisit}\\n📝 ملاحظات: ${$json.notes || '—'}\\n\\n🔖 رقم الحجز: ${$json.ref}`\n}) }}",
+        "options": {}
+      },
+      "notes": "number = the receptionist's WhatsApp. Evolution API v2 sendText."
+    },
+    {
+      "id": "wa-patient",
+      "name": "WhatsApp — Patient confirmation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 90],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://EVOLUTION_HOST/message/sendText/EVOLUTION_INSTANCE",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "apikey", "value": "PUT_YOUR_EVOLUTION_API_KEY" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  number: $json.phoneWa,\n  text: `أهلاً ${$json.name} 👋\\n\\nتم تأكيد حجزك في *عيادة دنتيكا لطب الأسنان*.\\n\\n🦷 الخدمة: ${$json.service}\\n📅 المعاد: ${$json.date} الساعة ${$json.time}\\n🔖 رقم الحجز: ${$json.ref}\\n\\nلو حابب تعدّل أو تلغي، رد على الرسالة دي.`\n}) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Optional. Fails softly so a bad patient number never blocks the booking."
+    },
+    {
+      "id": "respond-ok",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 0],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, ref: $('Normalize').first().json.ref }) }}",
+        "options": { "responseHeaders": { "entries": [ { "name": "Access-Control-Allow-Origin", "value": "*" } ] } }
+      }
+    },
+
+    {
+      "id": "wh-slots",
+      "name": "Slots Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-460, 320],
+      "webhookId": "dentica-slots",
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "dentica-slots",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      }
+    },
+    {
+      "id": "sheet-read",
+      "name": "Read Bookings",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [-240, 320],
+      "parameters": {
+        "documentId": { "__rl": true, "mode": "id", "value": "PUT_YOUR_GOOGLE_SHEET_ID_HERE" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Bookings" },
+        "options": {}
+      },
+      "credentials": { "googleSheetsOAuth2Api": { "id": "REPLACE", "name": "Google Sheets account" } }
+    },
+    {
+      "id": "taken",
+      "name": "Taken Slots",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-20, 320],
+      "parameters": {
+        "jsCode": "const date = $('Slots Webhook').first().json.query.date;\nconst taken = $input.all()\n  .map(i => i.json)\n  .filter(r => String(r.Date) === date && String(r.Status || '').toLowerCase() !== 'cancelled')\n  .map(r => String(r.Time));\nreturn [{ json: { date, taken } }];"
+      }
+    },
+    {
+      "id": "respond-slots",
+      "name": "Respond Slots",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [200, 320],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ date: $json.date, taken: $json.taken }) }}",
+        "options": { "responseHeaders": { "entries": [ { "name": "Access-Control-Allow-Origin", "value": "*" } ] } }
+      }
+    }
+  ],
+  "connections": {
+    "Booking Webhook":        { "main": [ [ { "node": "Normalize", "type": "main", "index": 0 } ] ] },
+    "Normalize":              { "main": [ [ { "node": "Append to Google Sheet", "type": "main", "index": 0 } ] ] },
+    "Append to Google Sheet": { "main": [ [ { "node": "WhatsApp — Receptionist", "type": "main", "index": 0 }, { "node": "WhatsApp — Patient confirmation", "type": "main", "index": 0 } ] ] },
+    "WhatsApp — Receptionist":{ "main": [ [ { "node": "Respond OK", "type": "main", "index": 0 } ] ] },
+    "Slots Webhook":          { "main": [ [ { "node": "Read Bookings", "type": "main", "index": 0 } ] ] },
+    "Read Bookings":          { "main": [ [ { "node": "Taken Slots", "type": "main", "index": 0 } ] ] },
+    "Taken Slots":            { "main": [ [ { "node": "Respond Slots", "type": "main", "index": 0 } ] ] }
+  }
+}

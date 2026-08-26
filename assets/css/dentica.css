@@ -1,0 +1,303 @@
+/* ==========================================================================
+   Dentica Dental Clinic — theme switch (dark/light), EN/AR language, logo size
+   Loaded AFTER lumora.css so it wins on equal specificity.
+   ========================================================================== */
+
+:root{
+  --dentica-gold:#D4A017;
+  --dentica-gold-soft:#E8C25A;
+  --dentica-gold-deep:#A67C00;
+  --dentica-ink:#0B0B0B;
+  /* Arabic face — swap this one line to change the whole Arabic typeface */
+  --dentica-font-ar:'Cairo','Tajawal','Segoe UI',sans-serif;
+}
+
+/* ============================ 1. BIGGER LOGO ============================= */
+.navbar_logo{max-width:230px!important;}
+.logo_image{height:46px!important;width:auto!important;}
+.brand_logo{height:54px!important;width:auto!important;max-width:260px!important;}
+.legal-nav img{height:42px!important;width:auto!important;}
+@media(max-width:767px){
+  .navbar_logo{max-width:170px!important;}
+  .logo_image{height:36px!important;}
+}
+
+/* ======================= 2. HEADER CONTROL CLUSTER ======================= */
+.dentica-controls{display:flex;align-items:center;gap:8px;margin-inline-end:12px;}
+.dentica-controls.is-floating{position:fixed;top:14px;inset-inline-end:14px;z-index:9999;}
+.dc-btn,.dc-lang button{
+  font-family:Sora,'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;
+  border:1px solid rgba(212,160,23,.45);background:rgba(212,160,23,.10);color:var(--dentica-gold-deep);
+  border-radius:999px;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.dc-btn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;padding:0;}
+.dc-lang{display:inline-flex;padding:3px;gap:3px;border:1px solid rgba(212,160,23,.35);border-radius:999px;background:rgba(212,160,23,.07);}
+.dc-lang button{border:none;background:transparent;padding:6px 13px;line-height:1;}
+.dc-lang button.dc-ar{font-family:var(--dentica-font-ar);font-size:15px;padding:6px 14px;}
+.dc-btn:hover,.dc-lang button:hover{background:rgba(212,160,23,.22);color:var(--dentica-ink);}
+.dc-lang button.is-active{background:var(--dentica-gold);color:#0B0B0B;box-shadow:0 2px 10px rgba(212,160,23,.35);}
+.legal-nav .dentica-controls{margin-inline-start:auto;}
+@media(max-width:991px){.dentica-controls{margin-inline-end:8px;}.dc-lang button{padding:6px 10px;}}
+
+/* the navbar sits on dark imagery — brighten the controls there */
+.navbar-button_wrapper .dc-btn,.navbar-button_wrapper .dc-lang button{color:var(--dentica-gold-soft);}
+.navbar-button_wrapper .dc-lang button.is-active{color:#0B0B0B;}
+
+/* ============================== 3. DARK MODE ============================= */
+html[data-theme="dark"]{
+  --primitive-color--neutral-0:#141414;
+  --primitive-color--neutral-50:#161616;
+  --primitive-color--neutral-100:#181818;
+  --primitive-color--neutral-200:#1D1D1D;
+  --primitive-color--neutral-300:#262626;
+  --primitive-color--neutral-400:#333333;
+  --primitive-color--gray-600:#ABA496;
+  --primitive-color--gray-500:#9C9587;
+  --primitive-color--gray-400:#1F1F1F;
+  --color-shadow--neutral-12:#ffffff14;
+  --color-shadow--primary-dark-10:#ffffff12;
+  color-scheme:dark;
+}
+html[data-theme="dark"] body,html[data-theme="dark"] .page-wrapper{background:#0E0E0E;color:#E9E2D4;}
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,html[data-theme="dark"] h5,html[data-theme="dark"] h6{color:#F5EFE2;}
+html[data-theme="dark"] a{color:inherit;}
+html[data-theme="dark"] a:hover{color:var(--dentica-gold);}
+html[data-theme="dark"] .text-color-light{color:#F5EFE2;}
+html[data-theme="dark"] .text-color-dark{color:#ABA496;}
+
+/* surfaces that were hardcoded white/cream */
+html[data-theme="dark"] .background-white,
+html[data-theme="dark"] .navbar-dropdown_list,
+html[data-theme="dark"] .navbar-dropdown_list.w--open,
+html[data-theme="dark"] .testimonial-slider_mask,
+html[data-theme="dark"] .story-slider_arrow-wrap,
+html[data-theme="dark"] .success_card,
+html[data-theme="dark"] .job_item,
+html[data-theme="dark"] .service-item_wrap,
+html[data-theme="dark"] .locatioin_item,
+html[data-theme="dark"] .faq_item{background-color:#161616!important;color:#E9E2D4;}
+html[data-theme="dark"] [class*="_card"],html[data-theme="dark"] [class*="_item-wrap"]{border-color:rgba(212,160,23,.16);}
+
+/* hero form card */
+html[data-theme="dark"] .lead-form_card{background:#161616;box-shadow:0 28px 70px rgba(0,0,0,.65);border:1px solid rgba(212,160,23,.18);}
+html[data-theme="dark"] .lead-form_title{color:#F5EFE2;}
+html[data-theme="dark"] .lead-form_sub,html[data-theme="dark"] .lead-form_note{color:#9C9587;}
+html[data-theme="dark"] .lead-form_input{background:#101010;border-color:#2C2C2C;color:#EDE6D8;}
+html[data-theme="dark"] .lead-form_input::placeholder{color:#7C766B;}
+html[data-theme="dark"] .lead-form_btn{background:var(--dentica-gold);color:#0B0B0B;}
+html[data-theme="dark"] .lead-form_btn:hover{background:var(--dentica-gold-soft);}
+
+/* primary buttons read better as gold-on-black in dark mode */
+html[data-theme="dark"] .button_primary{background-color:var(--dentica-gold)!important;border-color:var(--dentica-gold)!important;}
+html[data-theme="dark"] .button_primary .button_text,
+html[data-theme="dark"] .button_primary svg{color:#0B0B0B!important;}
+html[data-theme="dark"] .button_primary:hover{background-color:var(--dentica-gold-soft)!important;}
+html[data-theme="dark"] .button_secondary{border-color:rgba(212,160,23,.5)!important;color:#F0E6D2!important;}
+
+/* section tags / dividers */
+html[data-theme="dark"] .section_tag{background:rgba(212,160,23,.14)!important;border-color:rgba(212,160,23,.35)!important;color:#E8C25A!important;}
+html[data-theme="dark"] .section_tag svg,html[data-theme="dark"] .section_tag path{color:#E8C25A!important;fill:#E8C25A!important;}
+html[data-theme="dark"] [class*="divider"]{background-color:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.10)!important;}
+html[data-theme="dark"] .text-highlighted{background-image:linear-gradient(94deg,#E8C25A,#D4A017);}
+
+/* navbar + footer */
+html[data-theme="dark"] .navbar_wrap,html[data-theme="dark"] .navbar_container{background-color:rgba(10,10,10,.86);}
+html[data-theme="dark"] .section_footer{background:#080808!important;}
+
+/* legal pages (their CSS is inline & hardcoded) */
+html[data-theme="dark"] .legal-nav{border-bottom-color:#242424!important;}
+html[data-theme="dark"] .legal-foot{border-top-color:#242424!important;color:#8E887C!important;}
+html[data-theme="dark"] .legal-wrap p,html[data-theme="dark"] .legal-wrap li{color:#C6BFB1!important;}
+html[data-theme="dark"] .legal-wrap .updated{color:#8E887C!important;}
+html[data-theme="dark"] .legal-wrap a,html[data-theme="dark"] .legal-nav a.back{color:var(--dentica-gold)!important;}
+
+/* photos feel gentler on a dark page */
+html[data-theme="dark"] img:not([src*="logo"]):not([src*="favicon"]){filter:brightness(.92) saturate(.96);}
+
+/* ======================== 4. ARABIC / RTL MODE ========================== */
+html[data-lang="ar"] body,
+html[data-lang="ar"] h1,html[data-lang="ar"] h2,html[data-lang="ar"] h3,
+html[data-lang="ar"] h4,html[data-lang="ar"] h5,html[data-lang="ar"] h6,
+html[data-lang="ar"] p,html[data-lang="ar"] a,html[data-lang="ar"] div,
+html[data-lang="ar"] span,html[data-lang="ar"] li,html[data-lang="ar"] button,
+html[data-lang="ar"] input,html[data-lang="ar"] textarea{
+  font-family:var(--dentica-font-ar)!important;
+}
+/* Cairo: normal UI line boxes, just kill the Latin letter-spacing */
+html[data-lang="ar"] [data-den-i18n]{
+  letter-spacing:normal!important;word-spacing:normal!important;
+  line-height:1.75!important;opacity:1!important;transform:none!important;filter:none!important;
+}
+html[data-lang="ar"] h1[data-den-i18n]{line-height:1.35!important;padding-bottom:.06em;}
+html[data-lang="ar"] h2[data-den-i18n],html[data-lang="ar"] h3[data-den-i18n]{line-height:1.4!important;padding-bottom:.05em;}
+html[data-lang="ar"] .dc-lang button[data-lang="en"]{font-family:Sora,Arial,sans-serif!important;}
+
+/* keep transform-driven components laid out LTR so sliders/marquees still work */
+html[dir="rtl"] .w-slider,html[dir="rtl"] .w-slider-mask,html[dir="rtl"] .scroll_track,
+html[dir="rtl"] .story-slider_wrap,html[dir="rtl"] .testimonial-slider_mask{direction:ltr;}
+html[dir="rtl"] .w-slide,html[dir="rtl"] .scroll_track > *{direction:rtl;}
+html[dir="rtl"] .dentica-controls{direction:ltr;}
+html[dir="rtl"] .lead-form_input{text-align:right;}
+
+/* ===================== 5. FIXES AFTER VISUAL REVIEW ===================== */
+/* the enlarged logo + new controls crowd the nav between 992px and 1300px */
+@media(min-width:992px) and (max-width:1300px){
+  .navbar_logo{max-width:180px!important;}
+  .logo_image{height:38px!important;}
+  .navbar_menu{gap:14px!important;}
+  .navbar_link{font-size:14px!important;}
+  .dc-lang button{padding:5px 9px;font-size:12px;}
+  .dc-btn{width:34px;height:34px;}
+}
+
+/* service cards ship pastel inline backgrounds — dark mode needs to win */
+html[data-theme="dark"] .service_item{background-color:#161514!important;border:1px solid rgba(212,160,23,.14);}
+html[data-theme="dark"] .service_item .service-item_number_text{color:#6E6759!important;}
+html[data-theme="dark"] .service_item h1,html[data-theme="dark"] .service_item h2,
+html[data-theme="dark"] .service_item h3,html[data-theme="dark"] .service_item h4{color:#F5EFE2!important;}
+html[data-theme="dark"] .service_item p,html[data-theme="dark"] .service_item .body-text-16px{color:#B4AC9E!important;}
+html[data-theme="dark"] .service-item_tag{background-color:rgba(255,255,255,.10)!important;color:#EDE6D8!important;}
+
+/* numbers/counters must stay LTR inside an RTL page */
+html[dir="rtl"] [class*="counter"],html[dir="rtl"] [class*="number"],
+html[dir="rtl"] [class*="_stat"],html[dir="rtl"] .our-info_item-link,
+html[dir="rtl"] [class*="phone"],html[dir="rtl"] time{direction:ltr;unicode-bidi:isolate;}
+html[dir="rtl"] .our-info_item-link{display:inline-block;}
+
+/* Arabic typography: Nastaliq needs room to breathe */
+html[data-lang="ar"] p,html[data-lang="ar"] li,html[data-lang="ar"] .body-text-16px,
+html[data-lang="ar"] .body-text-18px{line-height:1.85!important;}
+html[data-lang="ar"] h1,html[data-lang="ar"] h2,html[data-lang="ar"] h3{line-height:1.4!important;padding-bottom:.06em;}
+html[data-lang="ar"] .hero-text-split,html[data-lang="ar"] [hero-text-split]{
+  white-space:normal!important;overflow:visible!important;
+}
+
+/* mobile: keep the controls compact so the hamburger never gets pushed off-screen */
+@media(max-width:767px){
+  .dentica-controls{gap:5px;margin-inline-end:6px;}
+  .dc-btn{width:32px;height:32px;}
+  .dc-btn svg{width:15px;height:15px;}
+  .dc-lang{padding:2px;gap:2px;}
+  .dc-lang button{padding:5px 8px;font-size:11px;}
+  .dc-lang button.dc-ar{font-size:12px;padding:5px 9px;}
+  .navbar-button_wrapper{gap:6px;flex-wrap:nowrap;}
+}
+
+/* =========================== 6. BOOKING ENGINE =========================== */
+.dbk-overlay{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;
+  background:rgba(8,8,8,.62);backdrop-filter:blur(6px);padding:20px;}
+.dbk-overlay.is-open{display:flex;animation:dbkFade .22s ease;}
+@keyframes dbkFade{from{opacity:0}to{opacity:1}}
+.dbk-modal{width:100%;max-width:760px;max-height:90vh;overflow:auto;background:#fff;color:#0B0B0B;
+  border-radius:22px;box-shadow:0 40px 110px rgba(0,0,0,.45);animation:dbkUp .28s cubic-bezier(.2,.8,.3,1);
+  font-family:Sora,'Helvetica Neue',Arial,sans-serif;}
+@keyframes dbkUp{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+html[data-lang="ar"] .dbk-modal{font-family:var(--dentica-font-ar);}
+
+.dbk-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:26px 28px 14px;}
+.dbk-kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dentica-gold-deep);font-weight:700;}
+html[data-lang="ar"] .dbk-kicker{letter-spacing:normal;text-transform:none;}
+.dbk-title{margin:6px 0 0;font-size:24px;font-weight:700;letter-spacing:-.4px;}
+.dbk-x{border:0;background:transparent;font-size:30px;line-height:1;cursor:pointer;color:#9aa0a6;padding:0 4px;}
+.dbk-x:hover{color:var(--dentica-gold-deep);}
+.dbk-progress{height:3px;background:#EFE7D6;margin:0 28px;border-radius:2px;overflow:hidden;}
+.dbk-progress span{display:block;height:100%;background:linear-gradient(90deg,#D4A017,#E8C25A);transition:width .3s ease;}
+.dbk-body{padding:22px 28px 26px;}
+.dbk-foot{padding:0 28px 24px;}
+
+/* services */
+.dbk-svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.dbk-svc{display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:start;cursor:pointer;
+  padding:17px 18px;border:1px solid #E7E2D6;border-radius:14px;background:#FCFAF5;transition:all .18s ease;font:inherit;}
+.dbk-svc:hover{border-color:var(--dentica-gold);background:#FFF9E9;transform:translateY(-2px);}
+.dbk-svc.is-on{border-color:var(--dentica-gold);background:#FFF4DA;box-shadow:0 0 0 3px rgba(212,160,23,.18);}
+.dbk-svc-name{font-weight:600;font-size:15.5px;}
+.dbk-svc-min{font-size:13px;color:#8A8478;}
+
+/* calendar + slots */
+.dbk-when{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+.dbk-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:15px;}
+.dbk-mo{width:32px;height:32px;border-radius:50%;border:1px solid #E7E2D6;background:#fff;cursor:pointer;font-size:19px;line-height:1;color:#0B0B0B;}
+.dbk-mo:hover{border-color:var(--dentica-gold);color:var(--dentica-gold-deep);}
+.dbk-dow,.dbk-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.dbk-dow span{text-align:center;font-size:11px;color:#9A9488;padding-bottom:6px;}
+.dbk-day{height:38px;border:0;border-radius:10px;background:#F7F4EC;cursor:pointer;font:inherit;font-size:14px;color:#0B0B0B;transition:all .15s ease;}
+.dbk-day:hover:not(:disabled){background:#FFF0CE;}
+.dbk-day.is-off{background:transparent;color:#CFC9BC;cursor:not-allowed;}
+.dbk-day.is-empty{background:transparent;}
+.dbk-day.is-on{background:var(--dentica-gold);color:#0B0B0B;font-weight:700;}
+.dbk-slots-head{font-weight:600;font-size:15px;margin-bottom:12px;}
+.dbk-slot-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9A9488;margin:12px 0 7px;}
+html[data-lang="ar"] .dbk-slot-label{letter-spacing:normal;text-transform:none;font-size:12.5px;}
+.dbk-slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.dbk-slot{padding:9px 4px;border:1px solid #E7E2D6;border-radius:9px;background:#fff;cursor:pointer;font:inherit;font-size:13px;color:#0B0B0B;transition:all .15s ease;}
+.dbk-slot:hover{border-color:var(--dentica-gold);background:#FFF9E9;}
+.dbk-slot.is-on{background:var(--dentica-gold);border-color:var(--dentica-gold);font-weight:700;}
+.dbk-hint{color:#8A8478;font-size:14px;margin:0;}
+
+/* details form */
+.dbk-summary{display:flex;flex-direction:column;gap:3px;padding:14px 16px;border-radius:13px;background:#FFF6E2;
+  border:1px solid rgba(212,160,23,.28);margin-bottom:18px;font-size:14px;}
+.dbk-summary strong{font-size:15.5px;}
+.dbk-form{display:flex;flex-direction:column;gap:13px;}
+.dbk-field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#6E6859;}
+.dbk-field input,.dbk-field textarea{font:inherit;font-size:15px;color:#0B0B0B;background:#FBFAF6;border:1px solid #E4E0D5;
+  border-radius:11px;padding:12px 14px;outline:none;transition:border-color .18s ease,background .18s ease;}
+.dbk-field input:focus,.dbk-field textarea:focus{border-color:var(--dentica-gold);background:#fff;}
+.dbk-check{display:flex;align-items:center;gap:9px;font-size:14px;color:#6E6859;cursor:pointer;}
+.dbk-check input{width:17px;height:17px;accent-color:var(--dentica-gold);}
+.dbk-error{margin:0;color:#C0392B;font-size:13.5px;}
+.dbk-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
+  height:52px;padding:0 26px;border:0;border-radius:999px;background:var(--dentica-ink);color:#fff;font:inherit;
+  font-size:15px;font-weight:600;cursor:pointer;transition:background .2s ease,transform .15s ease;}
+.dbk-primary:hover{background:var(--dentica-gold);color:#0B0B0B;transform:translateY(-1px);}
+.dbk-primary:disabled{opacity:.6;cursor:default;transform:none;}
+.dbk-ghost{display:inline-flex;align-items:center;justify-content:center;height:52px;padding:0 22px;border-radius:999px;
+  border:1px solid #E0DACC;background:transparent;color:#0B0B0B;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;}
+.dbk-ghost:hover{border-color:var(--dentica-gold);color:var(--dentica-gold-deep);}
+
+/* confirmation */
+.dbk-done{text-align:center;}
+.dbk-tick{width:64px;height:64px;margin:6px auto 16px;border-radius:50%;display:grid;place-items:center;font-size:30px;
+  background:linear-gradient(140deg,#E8C25A,#D4A017);color:#0B0B0B;}
+.dbk-done h4{margin:0 0 6px;font-size:21px;font-weight:700;}
+.dbk-done p{margin:0 auto 18px;max-width:420px;color:#6E6859;font-size:14.5px;}
+.dbk-recap{display:flex;flex-direction:column;gap:10px;text-align:start;padding:16px 18px;border-radius:14px;background:#FBF8F0;border:1px solid #EFE7D6;}
+.dbk-recap div{display:flex;justify-content:space-between;gap:14px;font-size:14px;}
+.dbk-recap span{color:#8A8478;}
+.dbk-demo{margin-top:14px!important;font-size:12.5px!important;color:#B08900!important;}
+.dbk-done-actions{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+
+/* dark mode */
+html[data-theme="dark"] .dbk-modal{background:#141414;color:#EDE6D8;box-shadow:0 40px 110px rgba(0,0,0,.8);}
+html[data-theme="dark"] .dbk-progress{background:#262626;}
+html[data-theme="dark"] .dbk-svc,html[data-theme="dark"] .dbk-slot,html[data-theme="dark"] .dbk-mo{background:#1A1A1A;border-color:#2C2C2C;color:#EDE6D8;}
+html[data-theme="dark"] .dbk-svc:hover,html[data-theme="dark"] .dbk-slot:hover{background:#1F1B12;border-color:var(--dentica-gold);}
+html[data-theme="dark"] .dbk-svc.is-on{background:#2A2109;box-shadow:0 0 0 3px rgba(212,160,23,.22);}
+html[data-theme="dark"] .dbk-slot.is-on,html[data-theme="dark"] .dbk-day.is-on{background:var(--dentica-gold);color:#0B0B0B;}
+html[data-theme="dark"] .dbk-day{background:#1A1A1A;color:#EDE6D8;}
+html[data-theme="dark"] .dbk-day.is-off{background:transparent;color:#4A463E;}
+html[data-theme="dark"] .dbk-day:hover:not(:disabled){background:#241E10;}
+html[data-theme="dark"] .dbk-summary{background:#221B0B;border-color:rgba(212,160,23,.3);}
+html[data-theme="dark"] .dbk-field input,html[data-theme="dark"] .dbk-field textarea{background:#101010;border-color:#2C2C2C;color:#EDE6D8;}
+html[data-theme="dark"] .dbk-primary{background:var(--dentica-gold);color:#0B0B0B;}
+html[data-theme="dark"] .dbk-primary:hover{background:var(--dentica-gold-soft);}
+html[data-theme="dark"] .dbk-ghost{border-color:#333;color:#EDE6D8;}
+html[data-theme="dark"] .dbk-recap{background:#1A1A1A;border-color:#2A2A2A;}
+html[data-theme="dark"] .dbk-svc-min,html[data-theme="dark"] .dbk-hint,html[data-theme="dark"] .dbk-recap span,
+html[data-theme="dark"] .dbk-done p,html[data-theme="dark"] .dbk-field,html[data-theme="dark"] .dbk-check{color:#A29B8D;}
+html[data-theme="dark"] .dbk-dow span,html[data-theme="dark"] .dbk-slot-label{color:#7E786C;}
+
+/* responsive */
+@media(max-width:720px){
+  .dbk-overlay{padding:0;align-items:flex-end;}
+  .dbk-modal{max-width:100%;max-height:94vh;border-radius:20px 20px 0 0;}
+  .dbk-when{grid-template-columns:1fr;gap:20px;}
+  .dbk-svc-grid{grid-template-columns:1fr;}
+  .dbk-head,.dbk-body{padding-inline:18px;}
+  .dbk-progress{margin-inline:18px;}
+  .dbk-slot-grid{grid-template-columns:repeat(4,1fr);}
+  .dbk-done-actions{flex-direction:column;}
+  .dbk-primary,.dbk-ghost{width:100%;}
+}
